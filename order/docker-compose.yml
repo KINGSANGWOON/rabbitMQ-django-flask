@@ -1,0 +1,31 @@
+version: '3.8'
+services: 
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ' python manage.py runserver 0.0.0.0:8000'
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app # container > /app 안에 있는 모든 변경사항 order 디렉터리 안에 변경 사항
+    depends_on:
+      - db   #db 먼저 실행 시킴
+
+
+  db:
+    image: mysql:5.7.22 # 이 이미지를 사용하겠다
+    restart: always #자동 시작
+    environment:
+      MYSQL_DATABASE: lim
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - .dbdata:/var/lib/mysql  # docker comtainer 안에 있는 변경사항이 .dbdata에 반영이 된다
+    ports:
+      - 33066:3306 #외부에서는 33066 으로 접근해야 하지만 내부에서는 3306 으로 해도됨
+
+
+
+
